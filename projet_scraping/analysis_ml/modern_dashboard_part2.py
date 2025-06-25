@@ -4,6 +4,77 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
+# Définition des fonctions nécessaires
+def display_modern_metric(icon, value, label, delta=None, color="#4361ee"):
+    """Affiche une métrique moderne avec une icône et une valeur"""
+    delta_html = f"<div style='color: {'green' if delta and delta.startswith('+') else 'red'}; font-size: 0.8rem;'>{delta}</div>" if delta else ""
+    
+    st.markdown(f"""
+    <div style="background-color: white; border-radius: 10px; padding: 1.2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center; height: 100%;">
+        <i class="fas {icon}" style="font-size: 2rem; color: {color}; margin-bottom: 0.8rem;"></i>
+        <div style="font-size: 1.5rem; font-weight: 700; color: {color}; margin-bottom: 0.5rem;">{value}</div>
+        <div style="font-size: 0.9rem; color: #64748b; font-weight: 500;">{label}</div>
+        {delta_html}
+    </div>
+    """, unsafe_allow_html=True)
+
+def create_interactive_chart(df, x_col, y_col, chart_type="bar", title="", color_col=None):
+    """Crée un graphique interactif avec Plotly"""
+    if chart_type == "bar":
+        fig = px.bar(
+            df, 
+            x=x_col, 
+            y=y_col,
+            color=color_col,
+            title=title,
+            template="plotly_white"
+        )
+    elif chart_type == "line":
+        fig = px.line(
+            df, 
+            x=x_col, 
+            y=y_col,
+            color=color_col,
+            title=title,
+            template="plotly_white"
+        )
+    elif chart_type == "scatter":
+        fig = px.scatter(
+            df, 
+            x=x_col, 
+            y=y_col,
+            color=color_col,
+            title=title,
+            template="plotly_white"
+        )
+    elif chart_type == "pie":
+        fig = px.pie(
+            df, 
+            names=x_col, 
+            values=y_col,
+            title=title,
+            template="plotly_white"
+        )
+    
+    # Personnaliser la mise en page
+    fig.update_layout(
+        font=dict(family="Inter, sans-serif"),
+        title=dict(
+            text=f"<b>{title}</b>",
+            font=dict(size=20, color="#1e293b"),
+            x=0.5,
+            xanchor="center"
+        ),
+        margin=dict(l=50, r=50, t=80, b=50),
+        hoverlabel=dict(
+            bgcolor="white",
+            font_size=14,
+            font_family="Inter, sans-serif"
+        )
+    )
+    
+    return fig
+
 def show_market_analysis(df):
     st.markdown("<h2 class='section-title'>Analyse du Marché du Travail</h2>", unsafe_allow_html=True)
     
@@ -87,8 +158,8 @@ def show_market_analysis(df):
             secteur_counts,
             'Secteur',
             'Nombre',
-            'Top 10 des Secteurs',
-            type='bar'
+            chart_type='bar',
+            title='Top 10 des Secteurs'
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -100,8 +171,8 @@ def show_market_analysis(df):
                 evolution_df,
                 'Annee',
                 'Nombre',
-                'Évolution des Offres d\'Emploi',
-                type='line'
+                chart_type='line',
+                title='Évolution des Offres d\'Emploi'
             )
             st.plotly_chart(fig, use_container_width=True)
         else:
@@ -122,8 +193,8 @@ def show_market_analysis(df):
             top_skills,
             'Compétence',
             'Nombre',
-            'Top 10 des Compétences Demandées',
-            type='bar'
+            chart_type='bar',
+            title='Top 10 des Compétences Demandées'
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -136,6 +207,6 @@ def show_market_analysis(df):
             geo_df.head(10),
             'Ville',
             'Nombre',
-            'Top 10 des Villes',
-            type='bar'
+            chart_type='bar',
+            title='Top 10 des Villes'
         )

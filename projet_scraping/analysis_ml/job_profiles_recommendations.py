@@ -70,16 +70,16 @@ def run_job_profiles_recommendations():
                 profile = job_recommender.get_profile_details(profile_name)
                 
                 # Créer des badges pour les compétences
-                badges = [(skill, True) for skill in profile['required_skills'][:5]]
+                badges = [(skill, True) for skill in profile.get('skills_required', [])[:5]]
                 
                 # Afficher la carte de recommandation
                 display_recommendation_card(
                     title=profile_name,
-                    subtitle=f"Salaire moyen: {profile['average_salary']} | Niveau d'expérience: {profile['experience_level']}",
+                    subtitle=f"Salaire moyen: {profile.get('avg_salary', 'Non spécifié')}",
                     content=f"""
-                    <p><strong>Description:</strong> {profile['description']}</p>
-                    <p><strong>Parcours éducatif recommandé:</strong> {profile['education_path']}</p>
-                    <p><strong>Évolution de carrière:</strong> {profile['career_path']}</p>
+                    <p><strong>Description:</strong> {profile.get('description', 'Non spécifié')}</p>
+                    <p><strong>Parcours éducatif recommandé:</strong> {', '.join(profile.get('education', []))}</p>
+                    <p><strong>Évolution de carrière:</strong> {', '.join(profile.get('career_path', []))}</p>
                     """,
                     badges=badges
                 )
@@ -109,22 +109,22 @@ def run_job_profiles_recommendations():
                     
                     # Créer un expander pour chaque profil
                     with st.expander(f"{profile_name}"):
-                        st.markdown(f"**Description:** {profile['description']}")
+                        st.markdown(f"**Description:** {profile.get('description', 'Non spécifié')}")
                         
                         # Compétences requises
                         st.markdown("**Compétences requises:**")
                         skills_cols = st.columns(3)
-                        for j, skill in enumerate(profile['required_skills']):
+                        for j, skill in enumerate(profile.get('skills_required', [])):
                             skills_cols[j % 3].markdown(f"- {skill}")
                         
                         # Parcours éducatif
-                        st.markdown(f"**Parcours éducatif recommandé:** {profile['education_path']}")
+                        st.markdown(f"**Parcours éducatif recommandé:** {', '.join(profile.get('education', []))}")
                         
                         # Évolution de carrière
-                        st.markdown(f"**Évolution de carrière:** {profile['career_path']}")
+                        st.markdown(f"**Évolution de carrière:** {', '.join(profile.get('career_path', []))}")
                         
                         # Salaire moyen
-                        st.markdown(f"**Salaire moyen:** {profile['average_salary']}")
+                        st.markdown(f"**Salaire moyen:** {profile.get('avg_salary', 'Non spécifié')}")
             else:
                 st.info(f"Aucun profil dans la catégorie {category}")
     
@@ -135,7 +135,7 @@ def run_job_profiles_recommendations():
     profile_skills = {}
     for profile_name in all_profiles:
         profile = job_recommender.get_profile_details(profile_name)
-        profile_skills[profile_name] = len(profile['required_skills'])
+        profile_skills[profile_name] = len(profile.get('skills_required', []))
     
     profile_skills_df = pd.DataFrame({
         'Profil': list(profile_skills.keys()),
@@ -154,7 +154,7 @@ def run_job_profiles_recommendations():
     profile_skills_dict = {}
     for profile_name in all_profiles:
         profile = job_recommender.get_profile_details(profile_name)
-        profile_skills_dict[profile_name] = set(profile['required_skills'])
+        profile_skills_dict[profile_name] = set(profile.get('skills_required', []))
     
     # Trouver les compétences communes
     all_skills_set = set()

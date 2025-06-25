@@ -245,6 +245,13 @@ class JobProfilesRecommender:
         if profile:
             return profile.get('career_path', [])
         return []
+        
+    def get_all_skills(self):
+        """Retourne toutes les compétences uniques de tous les profils"""
+        all_skills = set()
+        for profile_data in self.job_profiles.values():
+            all_skills.update(profile_data.get('skills_required', []))
+        return list(all_skills)
 
 # Fonction pour obtenir l'instance du recommandeur (singleton pattern)
 def get_recommender_instance():
