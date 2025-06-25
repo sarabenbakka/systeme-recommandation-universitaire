@@ -29,7 +29,25 @@ Ce projet est un système de recommandation universitaire basé sur l'analyse du
 ## Installation et exécution
 1. Cloner ce dépôt
 2. Installer les dépendances : `pip install -r requirements.txt`
-3. Lancer l'application : `streamlit run analysis_ml/run_modern_dashboard.py`
+3. Lancer l'application :
+
+   ```bash
+   # Si vous êtes dans le répertoire racine du projet
+   streamlit run projet_scraping/analysis_ml/main_dashboard.py
+   
+   # OU si vous préférez utiliser le dashboard moderne
+   streamlit run projet_scraping/analysis_ml/modern_dashboard.py
+   ```
+
+   **Note importante :** Assurez-vous d'exécuter la commande depuis le bon répertoire. Si vous êtes déjà dans le dossier `projet_scraping`, utilisez :
+   ```bash
+   streamlit run projet_scraping/analysis_ml/main_dashboard.py
+   ```
+   
+   Si vous êtes dans le sous-dossier `analysis_ml`, utilisez simplement :
+   ```bash
+   streamlit run main_dashboard.py
+   ```
 
 ## Captures d'écran
 ![Dashboard](screenshots/dashboard.png)
