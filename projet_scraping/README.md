@@ -1,3 +1,12 @@
+##  Système de recommandation universitaire
+
+Ce projet utilise le web scraping et l'analyse de données pour explorer le marché de l'emploi au Maroc.
+
+### ▶ Pour exécuter le dashboard :
+```bash
+streamlit run projet_scraping/analysis_ml/modern_dashboard.py
+
+
 # Projet de Scraping d'Offres d'Emploi
 
 Ce projet consiste à récupérer des données d'offres d'emploi depuis différentes plateformes (LinkedIn, emploi.ma, rekrute.com), fusionner les résultats, et les nettoyer pour une utilisation dans une base de données Oracle.
