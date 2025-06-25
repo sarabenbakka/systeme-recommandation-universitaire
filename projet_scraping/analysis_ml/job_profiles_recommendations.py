@@ -89,44 +89,116 @@ def run_job_profiles_recommendations():
     # Afficher tous les profils disponibles
     st.markdown('<div class="subsection-title">Tous les profils professionnels</div>', unsafe_allow_html=True)
     
-    # Créer des onglets pour chaque catégorie de profil
+    # Créer des onglets pour chaque domaine principal et leurs sous-domaines
     all_profiles = job_recommender.get_all_profiles()
+    
+    # Fonction pour obtenir le secteur principal d'un profil
+    def get_main_sector(profile_name):
+        profile = job_recommender.get_profile_details(profile_name)
+        sectors = profile.get('sector', [])
+        if 'Finance' in sectors:
+            return 'Finance'
+        elif any(s in sectors for s in ['IT', 'Data', 'Développement', 'Cybersécurité', 'Cloud']):
+            return 'IT'
+        else:
+            return 'Autres'
+    
+    # Fonction pour obtenir le sous-domaine d'un profil
+    def get_subdomain(profile_name):
+        profile = job_recommender.get_profile_details(profile_name)
+        sectors = profile.get('sector', [])
+        
+        # Sous-domaines Finance
+        if 'Finance' in sectors:
+            if 'Data' in sectors:
+                return 'Finance Quantitative'
+            elif 'IT' in sectors:
+                return 'Fintech'
+            else:
+                return 'Finance Traditionnelle'
+        
+        # Sous-domaines IT
+        elif any(s in sectors for s in ['IT', 'Data', 'Développement', 'Cybersécurité', 'Cloud']):
+            if 'Data' in sectors:
+                return 'Data & Analytics'
+            elif 'Développement' in sectors:
+                return 'Développement Logiciel'
+            elif 'Cybersécurité' in sectors:
+                return 'Cybersécurité'
+            elif 'Cloud' in sectors:
+                return 'Cloud & DevOps'
+            else:
+                return 'IT Général'
+        else:
+            return 'Autres'
+    
+    # Organiser les profils par domaine principal et sous-domaine
     profile_categories = {
-        "Data": [p for p in all_profiles if "Data" in p or "Analyst" in p],
-        "Développement": [p for p in all_profiles if "Développeur" in p or "Developer" in p or "Engineer" in p],
-        "Sécurité": [p for p in all_profiles if "Sécurité" in p or "Security" in p],
-        "Management": [p for p in all_profiles if "Manager" in p or "Lead" in p or "Chef" in p],
-        "Autres": [p for p in all_profiles if not any(p in cat for cat in ["Data", "Développement", "Sécurité", "Management"])]
+        "Finance": {
+            "Finance Traditionnelle": [p for p in all_profiles if get_main_sector(p) == 'Finance' and get_subdomain(p) == 'Finance Traditionnelle'],
+            "Finance Quantitative": [p for p in all_profiles if get_main_sector(p) == 'Finance' and get_subdomain(p) == 'Finance Quantitative'],
+            "Fintech": [p for p in all_profiles if get_main_sector(p) == 'Finance' and get_subdomain(p) == 'Fintech']
+        },
+        "IT": {
+            "Data & Analytics": [p for p in all_profiles if get_main_sector(p) == 'IT' and get_subdomain(p) == 'Data & Analytics'],
+            "Développement Logiciel": [p for p in all_profiles if get_main_sector(p) == 'IT' and get_subdomain(p) == 'Développement Logiciel'],
+            "Cybersécurité": [p for p in all_profiles if get_main_sector(p) == 'IT' and get_subdomain(p) == 'Cybersécurité'],
+            "Cloud & DevOps": [p for p in all_profiles if get_main_sector(p) == 'IT' and get_subdomain(p) == 'Cloud & DevOps'],
+            "IT Général": [p for p in all_profiles if get_main_sector(p) == 'IT' and get_subdomain(p) == 'IT Général']
+        }
     }
     
-    tabs = st.tabs(list(profile_categories.keys()))
+    # Créer des onglets pour les domaines principaux
+    main_domain_tabs = st.tabs(list(profile_categories.keys()))
     
-    for i, (category, profiles) in enumerate(profile_categories.items()):
-        with tabs[i]:
-            if profiles:
-                for profile_name in profiles:
-                    profile = job_recommender.get_profile_details(profile_name)
-                    
-                    # Créer un expander pour chaque profil
-                    with st.expander(f"{profile_name}"):
-                        st.markdown(f"**Description:** {profile.get('description', 'Non spécifié')}")
-                        
-                        # Compétences requises
-                        st.markdown("**Compétences requises:**")
-                        skills_cols = st.columns(3)
-                        for j, skill in enumerate(profile.get('skills_required', [])):
-                            skills_cols[j % 3].markdown(f"- {skill}")
-                        
-                        # Parcours éducatif
-                        st.markdown(f"**Parcours éducatif recommandé:** {', '.join(profile.get('education', []))}")
-                        
-                        # Évolution de carrière
-                        st.markdown(f"**Évolution de carrière:** {', '.join(profile.get('career_path', []))}")
-                        
-                        # Salaire moyen
-                        st.markdown(f"**Salaire moyen:** {profile.get('avg_salary', 'Non spécifié')}")
+    # Pour chaque domaine principal
+    for i, (main_domain, subdomains) in enumerate(profile_categories.items()):
+        with main_domain_tabs[i]:
+            # Afficher un en-tête pour le domaine principal
+            st.markdown(f"<div class='domain-header'><h3>💼 Domaine: {main_domain}</h3></div>", unsafe_allow_html=True)
+            
+            # Créer des onglets pour les sous-domaines
+            if subdomains:
+                subdomain_tabs = st.tabs(list(subdomains.keys()))
+                
+                # Pour chaque sous-domaine
+                for j, (subdomain, profiles) in enumerate(subdomains.items()):
+                    with subdomain_tabs[j]:
+                        if profiles:
+                            # Afficher un en-tête pour le sous-domaine
+                            st.markdown(f"<div class='subdomain-header'><h4>📊 Sous-domaine: {subdomain}</h4></div>", unsafe_allow_html=True)
+                            
+                            # Afficher les profils du sous-domaine
+                            for profile_name in profiles:
+                                profile = job_recommender.get_profile_details(profile_name)
+                                
+                                # Créer un expander pour chaque profil
+                                with st.expander(f"{profile_name}"):
+                                    # Afficher le secteur du profil
+                                    sectors = profile.get('sector', [])
+                                    st.markdown(f"**Secteur:** {', '.join(sectors)}")
+                                    
+                                    # Description
+                                    st.markdown(f"**Description:** {profile.get('description', 'Non spécifié')}")
+                                    
+                                    # Compétences requises
+                                    st.markdown("**Compétences requises:**")
+                                    skills_cols = st.columns(3)
+                                    for k, skill in enumerate(profile.get('skills_required', [])):
+                                        skills_cols[k % 3].markdown(f"- {skill}")
+                                    
+                                    # Parcours éducatif
+                                    st.markdown(f"**Parcours éducatif recommandé:** {', '.join(profile.get('education', []))}")
+                                    
+                                    # Évolution de carrière
+                                    st.markdown(f"**Évolution de carrière:** {', '.join(profile.get('career_path', []))}")
+                                    
+                                    # Salaire moyen
+                                    st.markdown(f"**Salaire moyen:** {profile.get('avg_salary', 'Non spécifié')}")
+                        else:
+                            st.info(f"Aucun profil dans le sous-domaine {subdomain}")
             else:
-                st.info(f"Aucun profil dans la catégorie {category}")
+                st.info(f"Aucun sous-domaine défini pour {main_domain}")
     
     # Analyse des compétences par profil
     st.markdown('<div class="subsection-title">Analyse des compétences par profil</div>', unsafe_allow_html=True)

@@ -206,7 +206,14 @@ elif pages[page] == "about":
     st.markdown("""
     <div class="card">
         <h3>Équipe</h3>
-        <p>Ce projet a été réalisé dans le cadre du Master Big Data à l'Université.</p>
+        <p>Ce projet a été réalisé dans le cadre du projet du module base de données Oracle au Master Big Data.</p>
+        <p>Les membres de l'équipe sont :</p>
+        <ul>
+            <li><strong>Aya BELHOU</strong></li>
+            <li><strong>Sara BENBAKKA</strong></li>
+            <li><strong>Ouissal ELHOR</strong></li>
+            <li><strong>Oumayma ESSABRI</strong></li>
+        </ul>
     </div>
     """, unsafe_allow_html=True)
 
