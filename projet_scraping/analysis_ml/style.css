@@ -293,8 +293,31 @@ header::before {
 /* Sélecteurs */
 .stSelectbox > div > div {
   border-radius: var(--radius);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 0.5rem;
+  color: #333;
+  background-color: #fff;
+}
+
+/* Amélioration de la visibilité des options dans les selectbox */
+.stSelectbox > div > div > div {
+  color: #333 !important;
+  font-weight: 400;
+}
+
+/* Style pour le texte sélectionné */
+.stSelectbox [data-baseweb="select"] > div {
+  color: #333 !important;
+}
+
+/* Style pour les options dans le menu déroulant */
+div[role="listbox"] ul li {
+  color: #333 !important;
+  background-color: #fff;
+}
+
+div[role="listbox"] ul li:hover {
+  background-color: #f0f2f6;
 }
 
 /* Animations */
