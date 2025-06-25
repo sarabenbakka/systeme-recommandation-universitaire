@@ -50,8 +50,39 @@ Ce projet est un système de recommandation universitaire basé sur l'analyse du
    ```
 
 ## Captures d'écran
-![Dashboard](screenshots/dashboard.png)
-*À venir*
+![image](https://github.com/user-attachments/assets/efab3c03-f561-4228-8cde-e246cc91f283)
+
+![image](https://github.com/user-attachments/assets/3a9e44b9-91e8-4bcd-ad3a-6f8ce3f134e4)
+
+![image](https://github.com/user-attachments/assets/c41e68bd-5466-492f-b1bb-b272a6e979d5)
+
+![image](https://github.com/user-attachments/assets/58e33cb8-fa96-45c4-8b4e-385763dd4368)
+
+![image](https://github.com/user-attachments/assets/128e5238-343b-4972-b427-02f476d50443)
+
+![image](https://github.com/user-attachments/assets/fc2453a7-d09f-40df-bde3-d5a40949266f)
+
+![image](https://github.com/user-attachments/assets/dccb66b2-4989-4d4e-8758-b9712707489e)
+
+![image](https://github.com/user-attachments/assets/bc89b5bd-a432-47de-b1b5-3da56d04266f)
+
+![image](https://github.com/user-attachments/assets/b41c30bf-7dd7-4f2c-a131-2a697c608d66)
+
+
+
+
+
+
+
+
+
 
 ## Auteurs
-Projet réalisé dans le cadre du Master Big Data à l'Université.
+Ce projet a été réalisé dans le cadre du projet du module base de données Oracle au Master Big Data.
+
+Les membres de l'équipe sont :
+
+Aya BELHOU
+Sara BENBAKKA
+Ouissal ELHOR
+Oumayma ESSABRI
